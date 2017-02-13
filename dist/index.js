@@ -14,11 +14,17 @@ var Base64DecoderApp = (function () {
             return;
         }
         var decoded = [];
+        encodedMultiPart = Base64DecoderApp.sanitize(encodedMultiPart);
         encodedMultiPart.split(/[^A-Za-z0-9+/=]+/).forEach(function (encodedPart) {
             var decodedPart = Base64DecoderApp.tryJsonDecode(Base64DecoderApp.tryBase64Decode(encodedPart));
             decoded.push(decodedPart);
         });
         this.outputBox.value = decoded.join('\n------------------------------\n');
+    };
+    Base64DecoderApp.sanitize = function (inputStr) {
+        inputStr = inputStr.replace(/\r?\n|\r/g, ''); //  remove all line breaks
+        inputStr = inputStr.replace(/\s/g, ''); //  remove all whitespaces
+        return inputStr;
     };
     Base64DecoderApp.tryBase64Decode = function (inputStr) {
         var result;
@@ -41,5 +47,5 @@ var Base64DecoderApp = (function () {
         return result;
     };
     return Base64DecoderApp;
-})();
+}());
 new Base64DecoderApp('input', 'output');

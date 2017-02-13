@@ -24,12 +24,21 @@ class Base64DecoderApp {
 
         let decoded: string[] = [];
 
+        encodedMultiPart = Base64DecoderApp.sanitize(encodedMultiPart);
+
         encodedMultiPart.split(/[^A-Za-z0-9+/=]+/).forEach((encodedPart: string) => {
             let decodedPart = Base64DecoderApp.tryJsonDecode(Base64DecoderApp.tryBase64Decode(encodedPart));
             decoded.push(decodedPart);
         });
 
         this.outputBox.value = decoded.join('\n------------------------------\n');
+    }
+
+    private static sanitize(inputStr: string): string {
+        inputStr = inputStr.replace(/\r?\n|\r/g, ''); //  remove all line breaks
+        inputStr = inputStr.replace(/\s/g, ''); //  remove all whitespaces
+
+        return inputStr;
     }
 
     private static tryBase64Decode(inputStr: string): string {
